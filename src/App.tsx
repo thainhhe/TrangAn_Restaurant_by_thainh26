@@ -43,12 +43,14 @@ function App() {
         <button className="btn-primary" onClick={openModal}>Đặt Bàn Ngay</button>
       </header>
 
-      {/* Hero Section */}
       <section className="hero">
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <h1>Tinh Hoa Ẩm Thực Cố Đô Giữa Lòng Hà Nội</h1>
-          <p>Trải nghiệm hương vị truyền thống trong không gian sang trọng, ấm cúng.</p>
+          <h1>Tràng An</h1>
+          <p>
+            Tinh Hoa Ẩm Thực Cố Đô Giữa Lòng Hà Nội<br />
+            Trải nghiệm hương vị truyền thống trong không gian sang trọng, ấm cúng.
+          </p>
           <button className="btn-large" onClick={openModal}>Đặt Bàn Ngay</button>
         </div>
       </section>

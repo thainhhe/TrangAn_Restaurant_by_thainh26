@@ -178,21 +178,33 @@ h4 {
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 800px;
+  width: 100%;
+  max-width: 1000px;
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
 }
 
 .hero-content h1 {
-  font-size: 4rem;
-  margin-bottom: 20px;
+  font-size: 96px;
+  margin: 0;
   color: var(--bg-light);
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: 4px;
 }
 
 .hero-content p {
-  font-size: 1.3rem;
-  margin-bottom: 40px;
-  color: var(--bg-light);
+  font-size: 20px;
+  margin: 0;
+  color: rgba(250, 248, 245, 0.8);
+  letter-spacing: 1px;
+  line-height: 2;
+}
+
+.hero-content .btn-large {
+  margin-top: 15px;
 }
 
 /* About */
@@ -404,6 +416,12 @@ h4 {
 }
 
 @media (max-width: 600px) {
+
+  .section-title,
+  .about-text h2 {
+    font-size: 1.8rem;
+  }
+
   .nav-links {
     display: none;
   }
