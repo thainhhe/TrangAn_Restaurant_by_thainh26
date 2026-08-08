@@ -18,6 +18,12 @@ function App() {
       setLoadingMenu(false);
     };
     loadMenu();
+
+    // Cuộn lên đầu trang và xóa lịch sử cuộn khi reload
+    window.scrollTo(0, 0);
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
   }, []);
 
   const openModal = () => setIsModalOpen(true);

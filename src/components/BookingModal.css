@@ -118,3 +118,13 @@
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
+
+@media (max-width: 600px) {
+  .booking-form .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .booking-form .form-row .form-group {
+    margin-bottom: 15px;
+  }
+}

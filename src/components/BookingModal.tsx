@@ -49,8 +49,14 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
     setLoading(false);
   };
 
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <button className="modal-close" onClick={onClose}>&times;</button>
         <h2>Đặt Bàn Tại Tràng An</h2>
