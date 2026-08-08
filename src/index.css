@@ -136,20 +136,22 @@ h4 {
 }
 
 .btn-large {
-  background-color: transparent;
-  color: var(--gold-primary);
-  border: 2px solid var(--gold-primary);
-  padding: 15px 40px;
-  font-size: 1.2rem;
-  font-weight: 600;
+  background-color: var(--gold-primary);
+  color: var(--wood-dark);
+  border: none;
+  padding: 18px 48px;
+  font-size: 1.3rem;
+  font-weight: 700;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 .btn-large:hover {
-  background-color: var(--gold-primary);
-  color: var(--wood-dark);
+  background-color: var(--gold-light);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
 }
 
 /* Hero */
@@ -160,33 +162,17 @@ h4 {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background-color: var(--wood-dark);
-  color: var(--text-light);
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 840px;
-  /* Ngang với text content */
-  height: 100%;
   background: url('/banner.jpg') no-repeat center center / cover;
+  color: var(--text-light);
 }
 
 .hero-overlay {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: 100%;
-  max-width: 840px;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  /* Tối màu đi một chút để chữ dễ đọc hơn */
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .hero-content {
@@ -199,7 +185,7 @@ h4 {
 .hero-content h1 {
   font-size: 4rem;
   margin-bottom: 20px;
-  color: var(--gold-primary);
+  color: var(--bg-light);
   line-height: 1.2;
 }
 

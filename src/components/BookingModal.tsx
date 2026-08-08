@@ -11,11 +11,33 @@ const bookingSchema = yup.object().shape({
     new Date(new Date().setHours(0, 0, 0, 0)),
     'Ngày đặt bàn không được là ngày trong quá khứ.'
   ).required('Vui lòng chọn ngày.'),
-  time: yup.string().test('is-valid-time', 'Nhà hàng mở cửa từ 09:00 đến 22:30.', (value) => {
+  time: yup.string().test('is-valid-time', 'Giờ không hợp lệ.', function (value) {
     if (!value) return false;
     const [hours, minutes] = value.split(':').map(Number);
     const timeValue = hours + minutes / 60;
-    return timeValue >= 9 && timeValue <= 22.5;
+    
+    if (timeValue < 9 || timeValue > 22.5) {
+      return this.createError({ message: 'Nhà hàng mở cửa từ 09:00 đến 22:30.' });
+    }
+
+    const selectedDate = this.parent.date;
+    if (selectedDate) {
+      const today = new Date();
+      const dateObj = new Date(selectedDate);
+      
+      if (
+        dateObj.getFullYear() === today.getFullYear() &&
+        dateObj.getMonth() === today.getMonth() &&
+        dateObj.getDate() === today.getDate()
+      ) {
+        const currentTimeValue = today.getHours() + today.getMinutes() / 60;
+        if (timeValue <= currentTimeValue) {
+          return this.createError({ message: 'Vui lòng chọn giờ lớn hơn thời gian hiện tại.' });
+        }
+      }
+    }
+    
+    return true;
   }).required('Vui lòng chọn giờ.'),
   guests: yup.number().min(1, 'Số người phải lớn hơn 0.').required('Vui lòng nhập số người.'),
   notes: yup.string()
