@@ -1,7 +1,25 @@
 import { useState } from 'react';
 import { submitBooking } from '../services/googleSheets';
 import type { BookingData } from '../services/googleSheets';
+import * as yup from 'yup';
 import './BookingModal.css';
+
+const bookingSchema = yup.object().shape({
+  name: yup.string().trim().min(2, 'Tên của bạn quá ngắn.').required('Vui lòng nhập tên.'),
+  phone: yup.string().matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/, 'Số điện thoại không hợp lệ (Ví dụ: 0912345678).').required('Vui lòng nhập số điện thoại.'),
+  date: yup.date().min(
+    new Date(new Date().setHours(0, 0, 0, 0)),
+    'Ngày đặt bàn không được là ngày trong quá khứ.'
+  ).required('Vui lòng chọn ngày.'),
+  time: yup.string().test('is-valid-time', 'Nhà hàng mở cửa từ 09:00 đến 22:30.', (value) => {
+    if (!value) return false;
+    const [hours, minutes] = value.split(':').map(Number);
+    const timeValue = hours + minutes / 60;
+    return timeValue >= 9 && timeValue <= 22.5;
+  }).required('Vui lòng chọn giờ.'),
+  guests: yup.number().min(1, 'Số người phải lớn hơn 0.').required('Vui lòng nhập số người.'),
+  notes: yup.string()
+});
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -27,8 +45,20 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Lấy ngày hôm nay định dạng YYYY-MM-DD cho thuộc tính min của ô chọn Ngày
+  const todayStr = new Date().toISOString().split('T')[0];
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    
+    try {
+      await bookingSchema.validate(formData);
+      setError('');
+    } catch (err: any) {
+      setError(err.message);
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -81,7 +111,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
           <div className="form-row">
             <div className="form-group">
               <label>Ngày *</label>
-              <input type="date" name="date" required value={formData.date} onChange={handleChange} />
+              <input type="date" name="date" required min={todayStr} value={formData.date} onChange={handleChange} />
             </div>
             <div className="form-group">
               <label>Giờ đến *</label>
