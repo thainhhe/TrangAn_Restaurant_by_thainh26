@@ -8,6 +8,7 @@ export interface MenuItem {
 export interface BookingData {
   name: string;
   phone: string;
+  date: string;
   time: string;
   guests: string;
   notes: string;

@@ -12,8 +12,9 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
   const [formData, setFormData] = useState<BookingData>({
     name: '',
     phone: '',
+    date: '',
     time: '',
-    guests: '',
+    guests: '2',
     notes: ''
   });
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
     if (isSuccess) {
       setSuccess(true);
       // Đặt lại form
-      setFormData({ name: '', phone: '', time: '', guests: '', notes: '' });
+      setFormData({ name: '', phone: '', date: '', time: '', guests: '2', notes: '' });
       setTimeout(() => {
         setSuccess(false);
         onClose();
@@ -68,20 +69,23 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
             </div>
             
             <div className="form-group">
-              <label>Số điện thoại *</label>
-              <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="VD: 0912 345 678" />
+            <label>Số điện thoại *</label>
+            <input type="tel" name="phone" required placeholder="Ví dụ: 0912345678" value={formData.phone} onChange={handleChange} />
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Ngày *</label>
+              <input type="date" name="date" required value={formData.date} onChange={handleChange} />
             </div>
-            
-            <div className="form-row">
-              <div className="form-group">
-                <label>Giờ đến *</label>
-                <input type="time" name="time" required value={formData.time} onChange={handleChange} />
-              </div>
-              <div className="form-group">
-                <label>Số người *</label>
-                <input type="number" min="1" name="guests" required value={formData.guests} onChange={handleChange} placeholder="VD: 4" />
-              </div>
+            <div className="form-group">
+              <label>Giờ đến *</label>
+              <input type="time" name="time" required value={formData.time} onChange={handleChange} />
             </div>
+            <div className="form-group">
+              <label>Số người</label>
+              <input type="number" name="guests" min="1" value={formData.guests} onChange={handleChange} />
+            </div>
+          </div>
 
             <div className="form-group">
               <label>Ghi chú (Tùy chọn)</label>
