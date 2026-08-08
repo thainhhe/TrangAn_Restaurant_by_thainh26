@@ -1,8 +1,28 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
+import { fetchMenuData } from './services/googleSheets';
+import type { MenuItem } from './services/googleSheets';
+import BookingModal from './components/BookingModal';
 
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loadingMenu, setLoadingMenu] = useState(true);
+
+  useEffect(() => {
+    const loadMenu = async () => {
+      setLoadingMenu(true);
+      const data = await fetchMenuData();
+      setMenuItems(data);
+      setLoadingMenu(false);
+    };
+    loadMenu();
+  }, []);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="app-container">
       {/* Header / Navbar */}
@@ -14,7 +34,7 @@ function App() {
           <a href="#gallery">Không gian</a>
           <a href="#reviews">Đánh giá</a>
         </nav>
-        <button className="btn-primary">Đặt Bàn Ngay</button>
+        <button className="btn-primary" onClick={openModal}>Đặt Bàn Ngay</button>
       </header>
 
       {/* Hero Section */}
@@ -23,7 +43,7 @@ function App() {
         <div className="hero-content">
           <h1>Tinh Hoa Ẩm Thực Cố Đô Giữa Lòng Hà Nội</h1>
           <p>Trải nghiệm hương vị truyền thống trong không gian sang trọng, ấm cúng.</p>
-          <button className="btn-large">Khám Phá Thực Đơn</button>
+          <button className="btn-large" onClick={openModal}>Đặt Bàn Ngay</button>
         </div>
       </section>
 
@@ -32,8 +52,8 @@ function App() {
         <div className="about-text">
           <h2>Về Nhà Hàng Tràng An</h2>
           <p>
-            Giữa nhịp sống hối hả của thủ đô, Tràng An hiện lên như một chốn bình yên, lưu giữ trọn vẹn tinh hoa ẩm thực Việt. 
-            Với thiết kế lấy cảm hứng từ những ngôi nhà cổ, sử dụng tông màu gỗ ấm áp và ánh đèn vàng dịu nhẹ, chúng tôi mang đến 
+            Giữa nhịp sống hối hả của thủ đô, Tràng An hiện lên như một chốn bình yên, lưu giữ trọn vẹn tinh hoa ẩm thực Việt.
+            Với thiết kế lấy cảm hứng từ những ngôi nhà cổ, sử dụng tông màu gỗ ấm áp và ánh đèn vàng dịu nhẹ, chúng tôi mang đến
             cho thực khách không chỉ là những bữa ăn ngon mà còn là một trải nghiệm không gian văn hóa đích thực.
           </p>
         </div>
@@ -45,33 +65,35 @@ function App() {
       {/* Signature Menu Section */}
       <section id="menu" className="menu section">
         <h2 className="section-title">Thực Đơn Đặc Sắc</h2>
-        <div className="menu-grid">
-          {[
-            { name: 'Dê Xé Phay', desc: 'Thịt dê tươi ngon, mềm ngọt hòa quyện cùng các loại gia vị đặc trưng.', price: '250.000đ' },
-            { name: 'Lẩu Riêu Cua Bắp Bò', desc: 'Nước lẩu thanh mát, riêu cua đồng nguyên chất, bắp bò giòn sần sật.', price: '450.000đ' },
-            { name: 'Gà Nướng Mộc', desc: 'Gà ta thả vườn nướng than hoa, da giòn thịt dai, thơm lừng.', price: '380.000đ' },
-            { name: 'Nộm Ngó Sen', desc: 'Món khai vị thanh đạm, giòn sần sật, chua ngọt hài hòa.', price: '120.000đ' }
-          ].map((item, index) => (
-            <div key={index} className="menu-card">
-              <div className="menu-image image-placeholder">Ảnh món {item.name}</div>
-              <div className="menu-info">
-                <h3>{item.name}</h3>
-                <p>{item.desc}</p>
-                <span className="price">{item.price}</span>
+        {loadingMenu ? (
+          <div style={{ textAlign: 'center', padding: '20px' }}>Đang tải thực đơn...</div>
+        ) : (
+          <div className="menu-grid">
+            {menuItems.map((item, index) => (
+              <div key={index} className="menu-card">
+                {item.image ? (
+                  <img src={item.image} alt={item.name} className="menu-image" style={{ objectFit: 'cover' }} />
+                ) : (
+                  <div className="menu-image image-placeholder">Ảnh món {item.name}</div>
+                )}
+                <div className="menu-info">
+                  <h3>{item.name}</h3>
+                  <p>{item.desc}</p>
+                  <span className="price">{item.price}</span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Gallery Section */}
       <section id="gallery" className="gallery section">
         <h2 className="section-title">Không Gian Tràng An</h2>
         <div className="gallery-grid">
-          <div className="gallery-item image-placeholder g-large">Phòng VIP sang trọng</div>
-          <div className="gallery-item image-placeholder">Góc sân vườn</div>
-          <div className="gallery-item image-placeholder">Bàn tiệc gia đình</div>
-          <div className="gallery-item image-placeholder">Chi tiết trang trí (Hoa sen)</div>
+          <img src="/palace.jpg" alt="Phòng VIP sang trọng" className="gallery-item g-large" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+          <img src="/place1.jpg" alt="Bàn tiệc gia đình" className="gallery-item" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+          <img src="/place2.jpg" alt="Chi tiết trang trí" className="gallery-item" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
         </div>
       </section>
 
@@ -103,7 +125,15 @@ function App() {
             <p>⏰ Giờ mở cửa: 09:00 - 22:30</p>
           </div>
           <div className="footer-map">
-             <div className="image-placeholder map-placeholder">Google Maps Embed</div>
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14897.46793239677!2d105.77436295058928!3d21.017997201326157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab0d0d093d69%3A0x3642779b91f09f62!2zTmjDoCBIw6BuZyBUcsOgbmcgQW4!5e0!3m2!1svi!2s!4v1786199454019!5m2!1svi!2s" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0, borderRadius: '8px' }} 
+              allowFullScreen={true} 
+              loading="lazy" 
+              referrerPolicy="strict-origin-when-cross-origin">
+            </iframe>
           </div>
         </div>
         <div className="footer-bottom">
@@ -111,6 +141,9 @@ function App() {
         </div>
       </footer>
       <Analytics />
+
+      {/* Booking Modal */}
+      <BookingModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }
